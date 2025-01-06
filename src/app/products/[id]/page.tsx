@@ -28,14 +28,32 @@ export default async function ProductPage({ params }: Props) {
             className="object-cover rounded-lg"
             priority
           />
+          {product.salePrice && (
+            <div className="absolute top-4 right-4 bg-red-500 text-white px-4 py-2 rounded-full font-bold">
+              SALE!
+            </div>
+          )}
         </div>
 
         {/* Product Details */}
         <div className="flex flex-col justify-center">
           <h1 className="text-4xl font-bold mb-4">{product.name}</h1>
-          <p className="text-2xl font-semibold text-blue-600 mb-6">
-            ${product.price.toLocaleString('en-US', { minimumFractionDigits: 2 })}
-          </p>
+          <div className="flex items-baseline gap-4 mb-6">
+            {product.salePrice ? (
+              <>
+                <span className="text-gray-500 line-through text-xl">
+                  ${product.price.toLocaleString('en-US', { minimumFractionDigits: 2 })}
+                </span>
+                <span className="text-3xl font-bold text-red-600">
+                  ${product.salePrice.toLocaleString('en-US', { minimumFractionDigits: 2 })}
+                </span>
+              </>
+            ) : (
+              <span className="text-2xl font-semibold text-blue-600">
+                ${product.price.toLocaleString('en-US', { minimumFractionDigits: 2 })}
+              </span>
+            )}
+          </div>
           <p className="text-gray-600 text-lg mb-8">{product.description}</p>
           <AddToCartButton productId={product.id} />
         </div>

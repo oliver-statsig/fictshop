@@ -21,13 +21,31 @@ export default function ProductsPage() {
                   fill
                   className="object-cover group-hover:scale-105 transition-transform"
                 />
+                {product.salePrice && (
+                  <div className="absolute top-4 right-4 bg-red-500 text-white px-4 py-2 rounded-full font-bold">
+                    SALE!
+                  </div>
+                )}
               </div>
               <div className="p-4">
                 <h2 className="text-xl font-semibold mb-2">{product.name}</h2>
-                <p className="text-blue-600 font-semibold mb-2">
-                  ${product.price.toLocaleString('en-US', { minimumFractionDigits: 2 })}
-                </p>
-                <p className="text-gray-600 line-clamp-2">{product.description}</p>
+                <div className="flex items-baseline gap-2">
+                  {product.salePrice ? (
+                    <>
+                      <span className="text-gray-500 line-through">
+                        ${product.price.toLocaleString('en-US', { minimumFractionDigits: 2 })}
+                      </span>
+                      <span className="text-red-600 font-semibold">
+                        ${product.salePrice.toLocaleString('en-US', { minimumFractionDigits: 2 })}
+                      </span>
+                    </>
+                  ) : (
+                    <span className="text-blue-600 font-semibold">
+                      ${product.price.toLocaleString('en-US', { minimumFractionDigits: 2 })}
+                    </span>
+                  )}
+                </div>
+                <p className="text-gray-600 line-clamp-2 mt-2">{product.description}</p>
               </div>
             </div>
           </Link>
