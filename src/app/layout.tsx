@@ -2,6 +2,7 @@ import "./globals.css";
 
 import { Geist, Geist_Mono } from "next/font/google";
 
+import CartCount from "@/components/CartCount";
 import Link from 'next/link';
 import type { Metadata } from "next";
 
@@ -45,7 +46,7 @@ export default function RootLayout({
                   href="/products" 
                   className="text-gray-600 hover:text-gray-900 transition-colors"
                 >
-                  View Cart
+                  <CartCount />
                 </Link>
               </nav>
             </div>

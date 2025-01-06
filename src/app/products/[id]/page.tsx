@@ -1,3 +1,4 @@
+import AddToCartButton from '@/components/AddToCartButton';
 import Image from 'next/image';
 import { notFound } from 'next/navigation';
 import { products } from '@/data/products';
@@ -36,11 +37,7 @@ export default async function ProductPage({ params }: Props) {
             ${product.price.toLocaleString('en-US', { minimumFractionDigits: 2 })}
           </p>
           <p className="text-gray-600 text-lg mb-8">{product.description}</p>
-          <button 
-            className="bg-blue-600 text-white py-3 px-8 rounded-lg text-lg font-semibold hover:bg-blue-700 transition-colors"
-          >
-            Add to Cart
-          </button>
+          <AddToCartButton productId={product.id} />
         </div>
       </div>
     </div>
