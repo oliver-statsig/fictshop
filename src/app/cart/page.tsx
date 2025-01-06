@@ -6,12 +6,14 @@ import { useEffect, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { products } from '@/data/products';
+import { useRouter } from 'next/navigation';
 
 interface CartItemWithProduct extends CartItem {
   product: typeof products[0];
 }
 
 export default function CartPage() {
+  const router = useRouter();
   const [cartItems, setCartItems] = useState<CartItemWithProduct[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -37,6 +39,10 @@ export default function CartPage() {
 
   const handleRemove = (productId: number) => {
     removeFromCart(productId);
+  };
+
+  const handleCheckout = () => {
+    router.push('/checkout');
   };
 
   const subtotal = cartItems.reduce((total, item) => {
@@ -118,7 +124,7 @@ export default function CartPage() {
         </div>
         <div className="flex justify-end">
           <button
-            onClick={() => alert('Checkout functionality coming soon!')}
+            onClick={handleCheckout}
             className="bg-blue-600 text-white py-3 px-8 rounded-lg text-lg font-semibold hover:bg-blue-700 transition-colors"
           >
             Proceed to Checkout
