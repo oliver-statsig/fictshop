@@ -28,8 +28,8 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
-        <header className="sticky top-0 bg-white border-b z-50">
-          <div className="max-w-6xl mx-auto">
+        <header className="bg-white border-b">
+          <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex justify-between items-center h-16">
               <Link href="/" className="text-xl font-bold">
                 FictShop
@@ -51,7 +51,7 @@ export default function RootLayout({
             </div>
           </div>
         </header>
-        <main>
+        <main className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           {children}
         </main>
       </body>

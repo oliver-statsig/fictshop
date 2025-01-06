@@ -2,6 +2,7 @@ export interface Product {
   id: number;
   name: string;
   price: number;
+  salePrice?: number;
   description: string;
   imageUrl: string;
 }
@@ -19,6 +20,7 @@ export const products: Product[] = [
     id: 2,
     name: "Pocket Time Machine",
     price: 999999.99,
+    salePrice: 42999.99,
     description:
       "Travel through time! Warranty void if you prevent your own birth.",
     imageUrl: "/images/time-machine.png",
