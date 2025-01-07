@@ -10,8 +10,8 @@ interface Props {
 }
 
 export default async function ProductPage({ params }: Props) {
-  const {id} = await params;
-  const product = products.find(p => p.id === parseInt(id));
+  const { id } = await params;
+  const product = products.find((p) => p.id === parseInt(id));
   if (!product) {
     notFound();
   }
@@ -42,15 +42,24 @@ export default async function ProductPage({ params }: Props) {
             {product.salePrice ? (
               <>
                 <span className="text-gray-500 line-through text-xl">
-                  ${product.price.toLocaleString('en-US', { minimumFractionDigits: 2 })}
+                  $
+                  {product.price.toLocaleString('en-US', {
+                    minimumFractionDigits: 2,
+                  })}
                 </span>
                 <span className="text-3xl font-bold text-red-600">
-                  ${product.salePrice.toLocaleString('en-US', { minimumFractionDigits: 2 })}
+                  $
+                  {product.salePrice.toLocaleString('en-US', {
+                    minimumFractionDigits: 2,
+                  })}
                 </span>
               </>
             ) : (
               <span className="text-2xl font-semibold text-blue-600">
-                ${product.price.toLocaleString('en-US', { minimumFractionDigits: 2 })}
+                $
+                {product.price.toLocaleString('en-US', {
+                  minimumFractionDigits: 2,
+                })}
               </span>
             )}
           </div>
@@ -60,4 +69,4 @@ export default async function ProductPage({ params }: Props) {
       </div>
     </div>
   );
-} 
+}
