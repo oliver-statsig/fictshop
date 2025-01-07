@@ -7,8 +7,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "traffic": "USE_PRODUCTION=true pnpm exec playwright test --project webkit --repeat-each=20",
-    "traffic:dev": "pnpm exec playwright test --project webkit",
+    "traffic": "USE_PRODUCTION=true pnpm exec playwright test --project chromium --repeat-each=20",
+    "traffic:dev": "pnpm exec playwright test --project chromium",
     "traffic-ui": "USE_PRODUCTION=true HAPPY_PATH=true pnpm exec playwright test --ui",
     "traffic-ui:dev": "HAPPY_PATH=true pnpm exec playwright test --ui",
     "generate-images": "tsx src/scripts/generate-images.ts"
