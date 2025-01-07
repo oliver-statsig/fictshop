@@ -58,7 +58,7 @@ async function maybeProceedToCheckout(page: Page): Promise<void> {
 async function maybeCompletePurchase(page: Page): Promise<void> {
   if (process.env.HAPPY_PATH || Math.random() < 0.5) {
     console.log('Completing purchase');
-    await page.getByRole('button', { name: /Complete purchase/i }).click();
+    await page.getByRole('link', { name: /Complete purchase/i }).click();
   } else {
     console.log('Not completing purchase');
   }

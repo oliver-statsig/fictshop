@@ -1,13 +1,12 @@
 'use client';
 
+import Link from 'next/link';
 import { getCart } from '@/utils/cart';
 import { products } from '@/data/products';
 import { useRouter } from 'next/navigation';
-import { useState } from 'react';
 
 export default function CheckoutPage() {
   const router = useRouter();
-  const [isProcessing, setIsProcessing] = useState(false);
 
   const cart = getCart();
   const cartItems = cart.map((item) => ({
@@ -24,12 +23,6 @@ export default function CheckoutPage() {
     router.push('/cart');
     return null;
   }
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsProcessing(true);
-    router.push('/checkout/success');
-  };
 
   return (
     <div className="py-8">
@@ -67,7 +60,7 @@ export default function CheckoutPage() {
 
         <div>
           <h2 className="text-2xl font-semibold mb-4">Payment Information</h2>
-          <form onSubmit={handleSubmit} className="space-y-4">
+          <div className="space-y-4">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
                 Cardholder Name
@@ -114,14 +107,13 @@ export default function CheckoutPage() {
                 />
               </div>
             </div>
-            <button
-              type="submit"
-              disabled={isProcessing}
-              className="w-full bg-blue-600 text-white py-3 px-8 rounded-lg text-lg font-semibold hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed mt-6"
+            <Link
+              href="/checkout/success"
+              className="block w-full bg-blue-600 text-white py-3 px-8 rounded-lg text-lg font-semibold hover:bg-blue-700 transition-colors text-center mt-6"
             >
-              {isProcessing ? 'Processing...' : 'Complete Purchase'}
-            </button>
-          </form>
+              Complete Purchase
+            </Link>
+          </div>
         </div>
       </div>
     </div>
