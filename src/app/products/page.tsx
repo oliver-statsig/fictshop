@@ -1,20 +1,31 @@
+'use client';
+
 import Image from 'next/image';
 import Link from 'next/link';
 import { products } from '@/data/products';
+import { use } from 'react';
+import { useGateValue } from '@statsig/react-bindings';
 
 const ITEMS_PER_PAGE = 3;
 
-export default function ProductsPage({
-  searchParams,
-}: {
-  searchParams: { page?: string };
-}) {
-  const currentPage = Number(searchParams.page) || 1;
+interface Props {
+  searchParams: Promise<{
+    page?: string;
+  }>;
+}
+
+export default function ProductsPage({ searchParams }: Props) {
+  const usePagination = useGateValue('product_listing_pagination');
+  const { page } = use(searchParams);
+
+  const currentPage = Number(page) || 1;
   const totalPages = Math.ceil(products.length / ITEMS_PER_PAGE);
 
   const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
   const endIndex = startIndex + ITEMS_PER_PAGE;
-  const currentProducts = products.slice(startIndex, endIndex);
+  const currentProducts = usePagination
+    ? products.slice(startIndex, endIndex)
+    : products;
 
   return (
     <div className="py-8">
@@ -77,27 +88,29 @@ export default function ProductsPage({
       </div>
 
       {/* Pagination Controls */}
-      <div className="mt-8 flex justify-center gap-2">
-        {currentPage > 1 && (
-          <Link
-            href={`/products?page=${currentPage - 1}`}
-            className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition-colors"
-          >
-            Previous
-          </Link>
-        )}
-        <span className="px-4 py-2 text-gray-600">
-          Page {currentPage} of {totalPages}
-        </span>
-        {currentPage < totalPages && (
-          <Link
-            href={`/products?page=${currentPage + 1}`}
-            className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition-colors"
-          >
-            Next
-          </Link>
-        )}
-      </div>
+      {usePagination && (
+        <div className="mt-8 flex justify-center gap-2">
+          {currentPage > 1 && (
+            <Link
+              href={`/products?page=${currentPage - 1}`}
+              className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition-colors"
+            >
+              Previous
+            </Link>
+          )}
+          <span className="px-4 py-2 text-gray-600">
+            Page {currentPage} of {totalPages}
+          </span>
+          {currentPage < totalPages && (
+            <Link
+              href={`/products?page=${currentPage + 1}`}
+              className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition-colors"
+            >
+              Next
+            </Link>
+          )}
+        </div>
+      )}
     </div>
   );
 }
