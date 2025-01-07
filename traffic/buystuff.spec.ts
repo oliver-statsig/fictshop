@@ -59,6 +59,8 @@ async function maybeCompletePurchase(page: Page): Promise<void> {
   if (process.env.HAPPY_PATH || Math.random() < 0.5) {
     console.log('Completing purchase');
     await page.getByRole('link', { name: /Complete purchase/i }).click();
+    console.log('Clicking Continue Shopping');
+    await page.getByRole('link', { name: /Continue Shopping/i }).click();
   } else {
     console.log('Not completing purchase');
   }
@@ -95,7 +97,7 @@ test('navigation decision tree', async ({ page }) => {
   await startNavigation(page);
 
   // Wait for the page_view_end event
-  await page.waitForTimeout(100);
+  await page.waitForTimeout(500);
 
   // Close the page to ensure logs are flushed
   await page.close({
