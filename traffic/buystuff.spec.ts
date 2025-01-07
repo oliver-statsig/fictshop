@@ -30,10 +30,14 @@ async function maybeClickRandomProduct(page: Page): Promise<void> {
 }
 
 async function maybeAddToCart(page: Page): Promise<void> {
-  const addToCartButton = page.getByRole('button', { name: /Add to cart/i });
-  console.log('Adding product to cart');
-  await addToCartButton.click();
-  await maybeViewCart(page);
+  const random = Math.random();
+  const hasReviews = await page.getByText('Customer Reviews').isVisible();
+  if (process.env.HAPPY_PATH || random < 0.5 || hasReviews) {
+    const addToCartButton = page.getByRole('button', { name: /Add to cart/i });
+    console.log('Adding product to cart');
+    await addToCartButton.click();
+    await maybeViewCart(page);
+  }
 }
 
 async function maybeViewCart(page: Page): Promise<void> {
