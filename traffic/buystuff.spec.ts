@@ -95,7 +95,7 @@ test('navigation decision tree', async ({ page }) => {
   await startNavigation(page);
 
   // Wait for the page_view_end event
-  await page.waitForTimeout(30);
+  await page.waitForTimeout(100);
 
   // Close the page to ensure logs are flushed
   await page.close({
