@@ -21,4 +21,4 @@ export default function CartCount() {
   }, []);
 
   return count > 0 ? `View Cart (${count})` : 'View Cart';
-} 
+}
