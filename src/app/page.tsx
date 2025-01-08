@@ -1,14 +1,11 @@
-'use client';
-
 import Image from 'next/image';
 import Link from 'next/link';
+import WelcomeMessage from '@/components/WelcomeMessage';
 import { products } from '@/data/products';
-import { useDynamicConfig } from '@statsig/react-bindings';
 
 export default function Home() {
   // Using the Time Machine as our featured product
   const featuredProduct = products[1]; // Pocket Time Machine
-  const greetingConfig = useDynamicConfig('seasonal_greeting');
 
   return (
     <>
@@ -17,7 +14,7 @@ export default function Home() {
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center">
             <h1 className="text-4xl font-bold mb-4">
-              {greetingConfig.get('welcome_message', 'Welcome to FictShop!')}
+              <WelcomeMessage />
             </h1>
             <p className="text-lg text-gray-600 max-w-2xl mx-auto">
               Where the impossible is just temporarily out of stock. We sell

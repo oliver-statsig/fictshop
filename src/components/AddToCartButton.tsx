@@ -1,6 +1,6 @@
 'use client';
 
-import { addToCart } from '@/utils/cart';
+import { useCart } from '@/utils/cart';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { useStatsigClient } from '@statsig/react-bindings';
@@ -13,6 +13,7 @@ export default function AddToCartButton({ productId }: Props) {
   const { client } = useStatsigClient();
   const router = useRouter();
   const [isAdded, setIsAdded] = useState(false);
+  const { addToCart } = useCart();
 
   const handleClick = () => {
     if (isAdded) {
@@ -20,7 +21,6 @@ export default function AddToCartButton({ productId }: Props) {
     } else {
       addToCart(productId);
       setIsAdded(true);
-
       client.logEvent('add_to_cart');
     }
   };

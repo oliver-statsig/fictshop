@@ -6,6 +6,7 @@ import CartCount from '@/components/CartCount';
 import Link from 'next/link';
 import type { Metadata } from 'next';
 import Statsig from './statsig';
+import { generateBootstrapValues } from '@/utils/statsig-backend';
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -22,17 +23,19 @@ export const metadata: Metadata = {
   description: 'Your one-stop shop for impossible products',
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const bootstrapValues = await generateBootstrapValues();
+
   return (
-    <html lang="en">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
-        <Statsig>
+    <Statsig bootstrapValues={bootstrapValues}>
+      <html lang="en">
+        <body
+          className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        >
           <header className="bg-white border-b">
             <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
               <div className="flex justify-between items-center h-16">
@@ -59,8 +62,8 @@ export default function RootLayout({
           <main className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
             {children}
           </main>
-        </Statsig>
-      </body>
-    </html>
+        </body>
+      </html>
+    </Statsig>
   );
 }
