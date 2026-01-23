@@ -1,12 +1,17 @@
 'use client';
 
-import Link from 'next/link';
-import { getCart } from '@/utils/cart';
 import { products } from '@/data/products';
+import { buildBaseEventMetadata } from '@/utils/demoStatsig';
+import { useExperiment, useStatsigClient } from '@statsig/react-bindings';
+import { getCart } from '@/utils/cart';
+import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 
 export default function CheckoutPage() {
   const router = useRouter();
+  const { client } = useStatsigClient();
+  const signupExperiment = useExperiment('new_user_signup_flow');
+  const signupFlow = signupExperiment.get('singup_flow_version', 'version_0');
 
   const cart = getCart();
   const cartItems = cart.map((item) => ({
@@ -23,6 +28,11 @@ export default function CheckoutPage() {
     router.push('/cart');
     return null;
   }
+
+  const handleCompletePurchase = () => {
+    client.logEvent('checkout_event', '1', buildBaseEventMetadata());
+    router.push('/checkout/success');
+  };
 
   return (
     <div className="py-8">
@@ -51,8 +61,7 @@ export default function CheckoutPage() {
             <div className="flex justify-between text-xl font-bold">
               <span>Total</span>
               <span>
-                $
-                {subtotal.toLocaleString('en-US', { minimumFractionDigits: 2 })}
+                ${subtotal.toLocaleString('en-US', { minimumFractionDigits: 2 })}
               </span>
             </div>
           </div>
@@ -107,11 +116,32 @@ export default function CheckoutPage() {
                 />
               </div>
             </div>
-            <Link
-              href="/checkout/success"
+            <div className="border rounded-lg p-4 bg-slate-50">
+              <h3 className="text-sm font-semibold text-gray-600 mb-2">
+                Signup flow: {signupFlow}
+              </h3>
+              {signupFlow === 'version_1' ? (
+                <p className="text-sm text-gray-600">
+                  You agree to the Temporal Loyalty Oath and accept promotional
+                  rifts in your inbox.
+                </p>
+              ) : (
+                <p className="text-sm text-gray-600">
+                  You consent to receive coupons from alternate dimensions.
+                </p>
+              )}
+            </div>
+            <button
+              onClick={handleCompletePurchase}
               className="block w-full bg-blue-600 text-white py-3 px-8 rounded-lg text-lg font-semibold hover:bg-blue-700 transition-colors text-center mt-6"
             >
               Complete Purchase
+            </button>
+            <Link
+              href="/cart"
+              className="text-sm text-gray-500 hover:text-gray-700 block text-center"
+            >
+              Return to cart
             </Link>
           </div>
         </div>

@@ -1,12 +1,12 @@
 'use client';
 
+import { products } from '@/data/products';
 import { CartItem, getCart, removeFromCart, updateCartItemQuantity } from '@/utils/cart';
-import { useEffect, useState } from 'react';
-
+import { useExperiment } from '@statsig/react-bindings';
 import Image from 'next/image';
 import Link from 'next/link';
-import { products } from '@/data/products';
 import { useRouter } from 'next/navigation';
+import { useEffect, useState } from 'react';
 
 interface CartItemWithProduct extends CartItem {
   product: typeof products[0];
@@ -14,15 +14,17 @@ interface CartItemWithProduct extends CartItem {
 
 export default function CartPage() {
   const router = useRouter();
+  const cacheExperiment = useExperiment('cdn_caching_strategy_');
+  const cacheStrategy = cacheExperiment.get('CacheStrategy', 'JIT');
   const [cartItems, setCartItems] = useState<CartItemWithProduct[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const loadCart = () => {
       const cart = getCart();
-      const itemsWithProducts = cart.map(item => ({
+      const itemsWithProducts = cart.map((item) => ({
         ...item,
-        product: products.find(p => p.id === item.productId)!
+        product: products.find((p) => p.id === item.productId)!,
       }));
       setCartItems(itemsWithProducts);
       setIsLoading(false);
@@ -47,7 +49,7 @@ export default function CartPage() {
 
   const subtotal = cartItems.reduce((total, item) => {
     const price = item.product.salePrice || item.product.price;
-    return total + (price * item.quantity);
+    return total + price * item.quantity;
   }, 0);
 
   if (isLoading) {
@@ -58,7 +60,7 @@ export default function CartPage() {
     return (
       <div className="py-8 text-center">
         <p className="text-gray-600 mb-4">Your cart is empty</p>
-        <Link 
+        <Link
           href="/products"
           className="text-blue-600 hover:text-blue-700 font-semibold"
         >
@@ -70,9 +72,14 @@ export default function CartPage() {
 
   return (
     <div className="py-8">
-      <h1 className="text-4xl font-bold mb-8">Your Cart</h1>
+      <div className="flex flex-col gap-2 mb-8">
+        <h1 className="text-4xl font-bold">Your Cart</h1>
+        <p className="text-sm text-gray-500">
+          Serving images via cache strategy: <strong>{cacheStrategy}</strong>
+        </p>
+      </div>
       <div className="space-y-6">
-        {cartItems.map(item => (
+        {cartItems.map((item) => (
           <div key={item.productId} className="flex gap-6 border rounded-lg p-4">
             <div className="relative w-32 h-32">
               <Image
@@ -83,9 +90,15 @@ export default function CartPage() {
               />
             </div>
             <div className="flex-grow">
-              <h2 className="text-xl font-semibold mb-2">{item.product.name}</h2>
+              <h2 className="text-xl font-semibold mb-2">
+                {item.product.name}
+              </h2>
               <p className="text-blue-600 font-semibold mb-2">
-                ${(item.product.salePrice || item.product.price).toLocaleString('en-US', { minimumFractionDigits: 2 })}
+                $
+                {(item.product.salePrice || item.product.price).toLocaleString(
+                  'en-US',
+                  { minimumFractionDigits: 2 },
+                )}
               </p>
               <div className="flex items-center gap-4">
                 <label className="flex items-center gap-2">
@@ -94,7 +107,12 @@ export default function CartPage() {
                     type="number"
                     min="1"
                     value={item.quantity}
-                    onChange={(e) => handleQuantityChange(item.productId, parseInt(e.target.value))}
+                    onChange={(e) =>
+                      handleQuantityChange(
+                        item.productId,
+                        parseInt(e.target.value),
+                      )
+                    }
                     className="w-16 border rounded px-2 py-1"
                   />
                 </label>
@@ -108,7 +126,11 @@ export default function CartPage() {
             </div>
             <div className="text-right">
               <p className="font-semibold">
-                ${((item.product.salePrice || item.product.price) * item.quantity).toLocaleString('en-US', { minimumFractionDigits: 2 })}
+                $
+                {(
+                  (item.product.salePrice || item.product.price) *
+                  item.quantity
+                ).toLocaleString('en-US', { minimumFractionDigits: 2 })}
               </p>
             </div>
           </div>
@@ -133,4 +155,4 @@ export default function CartPage() {
       </div>
     </div>
   );
-} 
+}
